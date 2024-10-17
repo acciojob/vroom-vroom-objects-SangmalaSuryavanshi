@@ -4,32 +4,44 @@ function Car(make, model) {
     this.model = model;
 }
 
-// Adding the getMakeModel method to Car's prototype
 Car.prototype.getMakeModel = function() {
     return `${this.make} ${this.model}`;
 };
 
 function SportsCar(make, model, topSpeed) {
-    // Call the parent constructor to initialize make and model
-    Car.call(this, make, model);
+    Car.call(this, make, model); // Call Car constructor
     this.topSpeed = topSpeed;
 }
 
-// Set the prototype of SportsCar to an instance of Car
 SportsCar.prototype = Object.create(Car.prototype);
 SportsCar.prototype.constructor = SportsCar;
 
-// Adding the getTopSpeed method to SportsCar's prototype
 SportsCar.prototype.getTopSpeed = function() {
     return this.topSpeed;
 };
 
-const myCar = new Car('Toyota', 'Corolla');
-console.log(myCar.getMakeModel()); // Output: Toyota Corolla
+it('should create a SportsCar instance and verify properties', () => {
+    cy.visit(baseUrl + "/main.html");
 
-const mySportsCar = new SportsCar('Ferrari', '488', 211);
-console.log(mySportsCar.getMakeModel()); // Output: Ferrari 488
-console.log(mySportsCar.getTopSpeed()); // Output: 211
+    cy.window().then(win => {
+        const SportsCar = win.SportsCar;
+        const car = new SportsCar("Ferrari", "Testarossa", 200);
+        
+        expect(car.make).to.equal("Ferrari");
+        expect(car.model).to.equal("Testarossa");
+    });
+});
+
+cy.window().then(win => {
+    console.log(win.SportsCar); // Check if the SportsCar constructor is available
+    const SportsCar = win.SportsCar;
+    const car = new SportsCar("Ferrari", "Testarossa", 200);
+    
+    expect(car.make).to.equal("Ferrari");
+    expect(car.model).to.equal("Testarossa");
+});
+
+
 
 function Car(make, model) {}
 
